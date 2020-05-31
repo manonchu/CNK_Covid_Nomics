@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>COVID-Nomics Mapping</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+     <!-- Load Leaflet CSS -->
+    <link href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" rel="stylesheet">
+    
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,700,700italic,800,800italic,italic,regular&amp;subset=latin" media="all"/>
+    
+    <!-- Load Leaflet and Carto libraries -->
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://libs.cartocdn.com/carto.js/v4.2.0/carto.min.js"></script>
+    
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="./style.css">
+    
+    <!-- import the webpage's javascript file -->
+    <script src="/script.js" defer></script>
+  </head>  
+  
+  <body>    
+  
+    <div class="map-wrapper">
+        <div id="map"> </div>
+              <div class="dropdown">
+                <select>
+                  <option disabled selected>EXPLORE DATA SERIES...</option>
+                      <option value="covid">COVID-19 Cases per 100K People (as of May 14, 2020)</option>
+                      <option value="jobdis">Proportion of Workers At High Risk of Job Displacement</option>
+                      <option value="insurance">Proportion of Workers Not Covered by Unemployment Insurance</option>
+                      <option value="cares">Proportion of Individuals Unlikely to Receive a CARES Act Individual Rebate</option>
+                      <option value="burden">Shelter-In-Place Burden Index</option>
+                      <option value ="vulnerable"> Renter Vulnerable Neighborhood Index </option> 
+                </select>     
+              </div>    
+      
+        <ul class="buttons">
+                <li>
+                  <button class="toggle-citycouncil">
+                  Toggle LA City Council Districts              
+                  </button>
+                </li>
+
+                <li>
+                  <button class="toggle-countydistricts">
+                  Toggle LA County Supervisorial Districts              
+                  </button>
+                </li>
+        </ul>
+      
+      <div class="legend">
+          <!-- add a legend for each layer -->
+          <!-- vulnerability legend is initially hidden, so set display to none-->
+          <div class="vulnerable-legend" style="display: none;">
+            <div class="legend-header"> Renter Vulnerable Neighborhood Index </div>
+                     <div class="legends items">
+                          <div class ="legend-label">lowest</div>
+                          <div class ="legend-label">&nbsp;</div>
+                          <div class ="legend-label">moderate</div>
+                          <div class ="legend-label">&nbsp;</div>
+                          <div class ="legend-label">highest</div>            
+                      </div>      
+            
+                  <div class="legends items">
+                             <div class="legend-color gradient-1" style="background-color:#4c95cb;"></div><!--
+                            --><div class="legend-color gradient-3" style="background-color:#cbe6f0;"></div><!--
+                            --><div class="legend-color gradient-3" style="background-color:#f9f9d2;"></div><!--
+                            --><div class="legend-color gradient-3" style="background-color:#fac591;"></div><!--
+                             --><div class="legend-color gradient-5" style="background-color:#ec6567;"></div>
+                  </div>
+          </div>
+                  
+        
+          <!-- job displacement legend is initially hidden, so set display to none-->
+          <div class="jobdis-legend" style="display: none;">
+            <div class="legend-header"> Workers at High Risk of Job Displacement </div>
+                      <div class="legends items">
+                          <div class ="legend-label-2">0%</div>
+                          <div class ="legend-label-2">11%</div>
+                          <div class ="legend-label-2">15%</div>
+                          <div class ="legend-label-2">17%</div>
+                          <div class ="legend-label-2">20%</div>
+                          <div class ="legend-label-2">62%</div>            
+                      </div>                   
+            <div class="legends items">
+                             <div class="legend-color gradient-1" style="background-color:#4c95cb;"></div><!--
+                            --><div class="legend-color gradient-3" style="background-color:#cbe6f0;"></div><!--
+                            --><div class="legend-color gradient-3" style="background-color:#f9f9d2;"></div><!--
+                            --><div class="legend-color gradient-3" style="background-color:#fac591;"></div><!--
+                             --><div class="legend-color gradient-5" style="background-color:#ec6567;"></div>
+                  </div>
+          </div>
+        
+          <!-- burden index legend is initially hidden, so set display to none -->
+          <div class="burden-legend" style="display: none;">
+            <div class="legend-header"> Shelter-in-Place Burden Index </div>
+                    <div class="legends items">
+                          <div class ="legend-label">lowest</div>
+                          <div class ="legend-label">&nbsp;</div>
+                          <div class ="legend-label">moderate</div>
+                          <div class ="legend-label">&nbsp;</div>
+                          <div class ="legend-label">highest</div>            
+                      </div>                
+                                  <div class="legends items">
+                              <div class="legend-color gradient-1" style="background-color:#4c95cb;"></div><!--
+                            --><div class="legend-color gradient-3" style="background-color:#cbe6f0;"></div><!--
+                            --><div class="legend-color gradient-3" style="background-color:#f9f9d2;"></div><!--
+                            --><div class="legend-color gradient-3" style="background-color:#fac591;"></div><!--
+                             --><div class="legend-color gradient-5" style="background-color:#ec6567;"></div>
+                        </div>
+          </div>
+        
+        
+        
+          <!-- CARES Act legend is initially hidden, so set display to none -->
+          <div class="cares-legend" style="display: none;">
+            <div class="legend-header"> Individuals unlikely to receive CARES Act </div>
+                      <div class="legends items">
+                          <div class ="legend-label">lowest</div>
+                          <div class ="legend-label">&nbsp;</div>
+                          <div class ="legend-label">moderate</div>
+                          <div class ="legend-label">&nbsp;</div>
+                          <div class ="legend-label">highest</div>            
+                      </div>                
+            
+                      <div class="legends items">
+                             <div class="legend-color gradient-1" style="background-color:#d1eeea;"></div><!--
+                            --><div class="legend-color gradient-3" style="background-color:#85c4c9;"></div><!--
+                            --><div class="legend-color gradient-3" style="background-color:#68abb8;"></div><!--
+                            --><div class="legend-color gradient-3" style="background-color:#4f90a6;"></div><!--
+                             --><div class="legend-color gradient-5" style="background-color:#2a5674;"></div>
+                      </div>
+          </div>
+        
+
+         <!-- COVID legend is default legend -->
+          <div class="covid-legend">
+            <div class="legend-header"> COVID cases per 100K people </div>
+           <!-- <div> - <span class="legend-marker-covid"></span> + risk level </div>  -->
+                    <div class="legends items">
+                          <div class ="legend-label-2">0</div>
+                          <div class ="legend-label-2">130</div>
+                          <div class ="legend-label-2">196</div>
+                          <div class ="legend-label-2">284</div>
+                          <div class ="legend-label-2">416</div>
+                          <div class ="legend-label-2">2,844</div>            
+                      </div>                          
+            <div class="legends items">
+                             <div class="legend-color gradient-1" style="background-color:rgba(237,229,207,1);"></div><!--
+                            --><div class="legend-color gradient-3" style="background-color:rgba(218,175,145,1);"></div><!--
+                            --><div class="legend-color gradient-3" style="background-color:rgba(193,118,111,1);"></div><!--
+                            --><div class="legend-color gradient-3" style="background-color:#95455a;"></div><!--
+                             --><div class="legend-color gradient-5" style="background-color:rgba(84,31,63,1);"></div>
+                  </div>
+            </div>
+        
+      <!-- insurance legend is initially hidden, so set display to none-->
+          <div class="insurance-legend" style="display: none;">
+            <div class="legend-header"> Lack of Unemployment Insurance </div>
+                 <div class="legends items">
+                          <div class ="legend-label">lowest</div>
+                          <div class ="legend-label">&nbsp;</div>
+                          <div class ="legend-label">moderate</div>
+                        <div class ="legend-label">&nbsp;</div>
+                        <div class ="legend-label">highest</div>            
+                </div>
+      
+                   <div class="legends items">
+                             <div class="legend-color gradient-1" style="background-color:#4c95cb;"></div><!--
+                            --><div class="legend-color gradient-3" style="background-color:#cbe6f0;"></div><!--
+                            --><div class="legend-color gradient-3" style="background-color:#f9f9d2;"></div><!--
+                            --><div class="legend-color gradient-3" style="background-color:#fac591;"></div><!--
+                             --><div class="legend-color gradient-5" style="background-color:#ec6567;"></div>
+                  </div>
+            </div>
+            
+      </div>
+        
+   </div>
+      
+     
+  </body>
+</html>
